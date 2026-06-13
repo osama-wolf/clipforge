@@ -1,0 +1,11 @@
+fastapi==0.111.0
+uvicorn==0.30.1
+python-multipart==0.0.9
+jinja2==3.1.4
+anthropic==0.28.0
+yt-dlp==2024.5.27
+openai-whisper==20231117
+torch==2.3.0
+torchaudio==2.3.0
+pydantic==2.7.3
+aiofiles==23.2.1

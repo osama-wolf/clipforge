@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipForge – Auto Shorts Generator</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#08080f;color:#fff;font-family:'Segoe UI',sans-serif;min-height:100vh}
+  nav{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a2e}
+  .logo{font-size:22px;font-weight:800;background:linear-gradient(90deg,#FF4D4D,#FFB84D);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .badge{background:#FF4D4D22;border:1px solid #FF4D4D44;color:#FF4D4D;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+  .hero{text-align:center;padding:60px 20px 40px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:900;line-height:1.15;margin-bottom:16px}
+  .hero h1 span{background:linear-gradient(90deg,#FF4D4D,#FFB84D);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:#888;font-size:16px;max-width:500px;margin:0 auto 40px}
+  .card{background:#0f0f1c;border:1px solid #1e1e3a;border-radius:20px;padding:32px;max-width:640px;margin:0 auto}
+  .input-group{margin-bottom:16px}
+  .input-group label{display:block;font-size:12px;color:#888;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .input-group input,.input-group select{width:100%;padding:14px 16px;background:#0a0a16;border:1px solid #1e1e3a;border-radius:10px;color:#fff;font-size:14px;outline:none;transition:border-color .2s}
+  .input-group input:focus,.input-group select:focus{border-color:#FF4D4D88}
+  .input-group input::placeholder{color:#444}
+  .row{display:flex;gap:12px}
+  .row .input-group{flex:1}
+  .btn{width:100%;padding:16px;background:linear-gradient(90deg,#FF4D4D,#FFB84D);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
+  .btn:hover{opacity:.9}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  #progress-section{max-width:640px;margin:24px auto 0;display:none}
+  .progress-card{background:#0f0f1c;border:1px solid #1e1e3a;border-radius:16px;padding:24px}
+  .progress-label{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px}
+  .bar-bg{background:#1a1a2e;border-radius:999px;height:8px;overflow:hidden}
+  .bar-fill{height:100%;background:linear-gradient(90deg,#FF4D4D,#FFB84D);border-radius:999px;transition:width .5s ease;width:0%}
+  .status-msg{margin-top:12px;font-size:13px;color:#aaa;text-align:center}
+  #results-section{max-width:640px;margin:24px auto 60px;display:none}
+  .results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .results-header h2{font-size:18px;font-weight:700}
+  .btn-dl-all{padding:10px 20px;background:linear-gradient(90deg,#FF4D4D,#FFB84D);border:none;border-radius:10px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block}
+  .clip-card{background:#0f0f1c;border:1px solid #1e1e3a;border-radius:14px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .clip-title{font-weight:700;font-size:14px;margin-bottom:4px}
+  .clip-meta{font-size:12px;color:#666}
+  .clip-hook{font-size:12px;color:#FFB84D;margin-top:6px;font-style:italic}
+  .btn-dl{padding:8px 16px;background:#1a1a2e;border:1px solid #2a2a4e;border-radius:8px;color:#fff;font-size:13px;cursor:pointer;text-decoration:none;white-space:nowrap}
+  .btn-dl:hover{background:#2a2a4e}
+  .features{display:flex;gap:16px;max-width:640px;margin:32px auto 0;flex-wrap:wrap}
+  .feature{flex:1;min-width:140px;background:#0f0f1c;border:1px solid #1e1e3a;border-radius:12px;padding:16px;text-align:center}
+  .feature .icon{font-size:24px;margin-bottom:8px}
+  .feature .label{font-size:12px;color:#888}
+  .feature .val{font-size:15px;font-weight:700;margin-top:2px}
+  .error-box{background:#FF4D4D11;border:1px solid #FF4D4D44;border-radius:10px;padding:12px 16px;color:#FF4D4D;font-size:13px;margin-top:12px;display:none}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">⚡ ClipForge</div>
+  <div class="badge">AI Powered</div>
+</nav>
+
+<div class="hero">
+  <h1>Paste a video link.<br><span>Get viral shorts instantly.</span></h1>
+  <p>AI finds the best moments, cuts them into vertical 9:16 shorts — ready for TikTok & YouTube.</p>
+</div>
+
+<div class="card">
+  <div class="input-group">
+    <label>Video URL</label>
+    <input type="text" id="url" placeholder="https://youtube.com/watch?v=..." />
+  </div>
+  <div class="row">
+    <div class="input-group">
+      <label>Number of Shorts</label>
+      <select id="num">
+        <option value="3">3 Shorts</option>
+        <option value="5" selected>5 Shorts</option>
+        <option value="8">8 Shorts</option>
+        <option value="10">10 Shorts</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Clip Length</label>
+      <select id="dur">
+        <option value="30">30 seconds</option>
+        <option value="45" selected>45 seconds</option>
+        <option value="60">60 seconds</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn" id="gen-btn" onclick="start()">🚀 Generate Shorts</button>
+  <div class="error-box" id="err"></div>
+</div>
+
+<div class="features">
+  <div class="feature"><div class="icon">🧠</div><div class="label">AI Powered</div><div class="val">Claude AI</div></div>
+  <div class="feature"><div class="icon">✂️</div><div class="label">Auto Cut</div><div class="val">FFmpeg</div></div>
+  <div class="feature"><div class="icon">📱</div><div class="label">Format</div><div class="val">9:16 Vertical</div></div>
+  <div class="feature"><div class="icon">⚡</div><div class="label">Speed</div><div class="val">~2 min</div></div>
+</div>
+
+<div id="progress-section">
+  <div class="progress-card">
+    <div class="progress-label">
+      <span id="prog-text">Processing...</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="bar-bg"><div class="bar-fill" id="bar"></div></div>
+    <div class="status-msg" id="status-msg">Starting...</div>
+  </div>
+</div>
+
+<div id="results-section">
+  <div class="results-header">
+    <h2 id="results-title">✅ Shorts Ready!</h2>
+    <a class="btn-dl-all" id="dl-all" href="#">⬇ Download All (ZIP)</a>
+  </div>
+  <div id="clips-list"></div>
+</div>
+
+<script>
+let jobId = null, poll = null;
+
+async function start() {
+  const url = document.getElementById('url').value.trim();
+  if (!url) { showErr('Please enter a video URL'); return; }
+  const num = parseInt(document.getElementById('num').value);
+  const dur = parseInt(document.getElementById('dur').value);
+
+  document.getElementById('gen-btn').disabled = true;
+  document.getElementById('err').style.display = 'none';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('progress-section').style.display = 'block';
+  setProgress(5, 'Sending request...');
+
+  try {
+    const res = await fetch('/api/process', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({url, num_clips: num, clip_duration: dur})
+    });
+    const data = await res.json();
+    jobId = data.job_id;
+    poll = setInterval(checkStatus, 2000);
+  } catch(e) {
+    showErr('Failed to connect to server.');
+    document.getElementById('gen-btn').disabled = false;
+  }
+}
+
+async function checkStatus() {
+  try {
+    const res = await fetch(`/api/status/${jobId}`);
+    const data = await res.json();
+    setProgress(data.progress, data.message);
+    if (data.status === 'done') {
+      clearInterval(poll);
+      showResults(data);
+      document.getElementById('gen-btn').disabled = false;
+    } else if (data.status === 'error') {
+      clearInterval(poll);
+      showErr(data.message);
+      document.getElementById('progress-section').style.display = 'none';
+      document.getElementById('gen-btn').disabled = false;
+    }
+  } catch(e) { console.error(e); }
+}
+
+function setProgress(pct, msg) {
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('status-msg').textContent = msg;
+}
+
+function showResults(data) {
+  document.getElementById('progress-section').style.display = 'none';
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-title').textContent = `✅ ${data.clips.length} Shorts Ready!`;
+  document.getElementById('dl-all').href = data.zip_url;
+  const list = document.getElementById('clips-list');
+  list.innerHTML = data.clips.map((c, i) => `
+    <div class="clip-card">
+      <div class="clip-info">
+        <div class="clip-title">Short #${i+1}: ${c.title}</div>
+        <div class="clip-meta">⏱ ${Math.round(c.start)}s – ${Math.round(c.end)}s</div>
+        ${c.hook ? `<div class="clip-hook">Hook: "${c.hook}"</div>` : ''}
+      </div>
+      <a class="btn-dl" href="${c.url}" download>⬇ Download</a>
+    </div>`).join('');
+}
+
+function showErr(msg) {
+  const el = document.getElementById('err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+</script>
+</body>
+</html>
